@@ -1,0 +1,425 @@
+Terminals unused in grammar
+
+   SYNTAX_ERROR
+   EQUAL
+   ATTR_VALUE
+
+
+State 5 conflicts: 2 shift/reduce
+State 13 conflicts: 1 shift/reduce
+State 15 conflicts: 1 shift/reduce
+State 26 conflicts: 2 shift/reduce
+
+
+Grammar
+
+    0 $accept: stmt $end
+
+    1 stmt: S NL
+
+    2 S: START_ANGLE_BRACKET A_TAG anchor_attrs
+    3  | START_ANGLE_BRACKET IMG_TAG i img_ending
+
+    4 i: img_comp_attr img_other_attr i
+    5  | img_other_attr img_comp_attr
+
+    6 img_comp_attr: IMG_SRC
+    7              | IMG_ALT
+
+    8 img_other_attr: IMG_OTHER_ATTRIBUTE img_other_attr
+    9               | /* empty */
+
+   10 img_ending: IMG_END_TAG3
+   11           | IMG_END_TAG2
+   12           | END_TAG1
+
+   13 anchor_attrs: A_ATTRIBUTE anchor_attrs
+   14             | END_TAG1 anchor_rem A_END_TAG
+
+   15 anchor_rem: content S anchor_rem
+   16           | content
+
+   17 content: A_CONTENT content
+   18        | /* empty */
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+START_ANGLE_BRACKET (258) 2 3
+NL (259) 1
+A_TAG (260) 2
+A_ATTRIBUTE (261) 13
+SYNTAX_ERROR (262)
+EQUAL (263)
+ATTR_VALUE (264)
+END_TAG1 (265) 12 14
+A_CONTENT (266) 17
+A_END_TAG (267) 14
+IMG_TAG (268) 3
+IMG_ALT (269) 7
+IMG_SRC (270) 6
+IMG_OTHER_ATTRIBUTE (271) 8
+IMG_END_TAG2 (272) 11
+IMG_END_TAG3 (273) 10
+
+
+Nonterminals, with rules where they appear
+
+$accept (19)
+    on left: 0
+stmt (20)
+    on left: 1, on right: 0
+S (21)
+    on left: 2 3, on right: 1 15
+i (22)
+    on left: 4 5, on right: 3 4
+img_comp_attr (23)
+    on left: 6 7, on right: 4 5
+img_other_attr (24)
+    on left: 8 9, on right: 4 5 8
+img_ending (25)
+    on left: 10 11 12, on right: 3
+anchor_attrs (26)
+    on left: 13 14, on right: 2 13
+anchor_rem (27)
+    on left: 15 16, on right: 14 15
+content (28)
+    on left: 17 18, on right: 15 16 17
+
+
+state 0
+
+    0 $accept: . stmt $end
+    1 stmt: . S NL
+    2 S: . START_ANGLE_BRACKET A_TAG anchor_attrs
+    3  | . START_ANGLE_BRACKET IMG_TAG i img_ending
+
+    START_ANGLE_BRACKET  shift, and go to state 1
+
+    stmt  go to state 2
+    S     go to state 3
+
+
+state 1
+
+    2 S: START_ANGLE_BRACKET . A_TAG anchor_attrs
+    3  | START_ANGLE_BRACKET . IMG_TAG i img_ending
+
+    A_TAG    shift, and go to state 4
+    IMG_TAG  shift, and go to state 5
+
+
+state 2
+
+    0 $accept: stmt . $end
+
+    $end  shift, and go to state 6
+
+
+state 3
+
+    1 stmt: S . NL
+
+    NL  shift, and go to state 7
+
+
+state 4
+
+    2 S: START_ANGLE_BRACKET A_TAG . anchor_attrs
+   13 anchor_attrs: . A_ATTRIBUTE anchor_attrs
+   14             | . END_TAG1 anchor_rem A_END_TAG
+
+    A_ATTRIBUTE  shift, and go to state 8
+    END_TAG1     shift, and go to state 9
+
+    anchor_attrs  go to state 10
+
+
+state 5
+
+    3 S: START_ANGLE_BRACKET IMG_TAG . i img_ending
+    4 i: . img_comp_attr img_other_attr i
+    5  | . img_other_attr img_comp_attr
+    6 img_comp_attr: . IMG_SRC
+    7              | . IMG_ALT
+    8 img_other_attr: . IMG_OTHER_ATTRIBUTE img_other_attr
+    9               | .  [IMG_ALT, IMG_SRC]
+
+    IMG_ALT              shift, and go to state 11
+    IMG_SRC              shift, and go to state 12
+    IMG_OTHER_ATTRIBUTE  shift, and go to state 13
+
+    IMG_ALT  [reduce using rule 9 (img_other_attr)]
+    IMG_SRC  [reduce using rule 9 (img_other_attr)]
+
+    i               go to state 14
+    img_comp_attr   go to state 15
+    img_other_attr  go to state 16
+
+
+state 6
+
+    0 $accept: stmt $end .
+
+    $default  accept
+
+
+state 7
+
+    1 stmt: S NL .
+
+    $default  reduce using rule 1 (stmt)
+
+
+state 8
+
+   13 anchor_attrs: . A_ATTRIBUTE anchor_attrs
+   13             | A_ATTRIBUTE . anchor_attrs
+   14             | . END_TAG1 anchor_rem A_END_TAG
+
+    A_ATTRIBUTE  shift, and go to state 8
+    END_TAG1     shift, and go to state 9
+
+    anchor_attrs  go to state 17
+
+
+state 9
+
+   14 anchor_attrs: END_TAG1 . anchor_rem A_END_TAG
+   15 anchor_rem: . content S anchor_rem
+   16           | . content
+   17 content: . A_CONTENT content
+   18        | .  [START_ANGLE_BRACKET, A_END_TAG]
+
+    A_CONTENT  shift, and go to state 18
+
+    $default  reduce using rule 18 (content)
+
+    anchor_rem  go to state 19
+    content     go to state 20
+
+
+state 10
+
+    2 S: START_ANGLE_BRACKET A_TAG anchor_attrs .
+
+    $default  reduce using rule 2 (S)
+
+
+state 11
+
+    7 img_comp_attr: IMG_ALT .
+
+    $default  reduce using rule 7 (img_comp_attr)
+
+
+state 12
+
+    6 img_comp_attr: IMG_SRC .
+
+    $default  reduce using rule 6 (img_comp_attr)
+
+
+state 13
+
+    8 img_other_attr: . IMG_OTHER_ATTRIBUTE img_other_attr
+    8               | IMG_OTHER_ATTRIBUTE . img_other_attr
+    9               | .  [IMG_ALT, IMG_SRC, IMG_OTHER_ATTRIBUTE]
+
+    IMG_OTHER_ATTRIBUTE  shift, and go to state 13
+
+    IMG_OTHER_ATTRIBUTE  [reduce using rule 9 (img_other_attr)]
+    $default             reduce using rule 9 (img_other_attr)
+
+    img_other_attr  go to state 21
+
+
+state 14
+
+    3 S: START_ANGLE_BRACKET IMG_TAG i . img_ending
+   10 img_ending: . IMG_END_TAG3
+   11           | . IMG_END_TAG2
+   12           | . END_TAG1
+
+    END_TAG1      shift, and go to state 22
+    IMG_END_TAG2  shift, and go to state 23
+    IMG_END_TAG3  shift, and go to state 24
+
+    img_ending  go to state 25
+
+
+state 15
+
+    4 i: img_comp_attr . img_other_attr i
+    8 img_other_attr: . IMG_OTHER_ATTRIBUTE img_other_attr
+    9               | .  [IMG_ALT, IMG_SRC, IMG_OTHER_ATTRIBUTE]
+
+    IMG_OTHER_ATTRIBUTE  shift, and go to state 13
+
+    IMG_OTHER_ATTRIBUTE  [reduce using rule 9 (img_other_attr)]
+    $default             reduce using rule 9 (img_other_attr)
+
+    img_other_attr  go to state 26
+
+
+state 16
+
+    5 i: img_other_attr . img_comp_attr
+    6 img_comp_attr: . IMG_SRC
+    7              | . IMG_ALT
+
+    IMG_ALT  shift, and go to state 11
+    IMG_SRC  shift, and go to state 12
+
+    img_comp_attr  go to state 27
+
+
+state 17
+
+   13 anchor_attrs: A_ATTRIBUTE anchor_attrs .
+
+    $default  reduce using rule 13 (anchor_attrs)
+
+
+state 18
+
+   17 content: . A_CONTENT content
+   17        | A_CONTENT . content
+   18        | .  [START_ANGLE_BRACKET, A_END_TAG]
+
+    A_CONTENT  shift, and go to state 18
+
+    $default  reduce using rule 18 (content)
+
+    content  go to state 28
+
+
+state 19
+
+   14 anchor_attrs: END_TAG1 anchor_rem . A_END_TAG
+
+    A_END_TAG  shift, and go to state 29
+
+
+state 20
+
+    2 S: . START_ANGLE_BRACKET A_TAG anchor_attrs
+    3  | . START_ANGLE_BRACKET IMG_TAG i img_ending
+   15 anchor_rem: content . S anchor_rem
+   16           | content .  [A_END_TAG]
+
+    START_ANGLE_BRACKET  shift, and go to state 1
+
+    $default  reduce using rule 16 (anchor_rem)
+
+    S  go to state 30
+
+
+state 21
+
+    8 img_other_attr: IMG_OTHER_ATTRIBUTE img_other_attr .
+
+    $default  reduce using rule 8 (img_other_attr)
+
+
+state 22
+
+   12 img_ending: END_TAG1 .
+
+    $default  reduce using rule 12 (img_ending)
+
+
+state 23
+
+   11 img_ending: IMG_END_TAG2 .
+
+    $default  reduce using rule 11 (img_ending)
+
+
+state 24
+
+   10 img_ending: IMG_END_TAG3 .
+
+    $default  reduce using rule 10 (img_ending)
+
+
+state 25
+
+    3 S: START_ANGLE_BRACKET IMG_TAG i img_ending .
+
+    $default  reduce using rule 3 (S)
+
+
+state 26
+
+    4 i: . img_comp_attr img_other_attr i
+    4  | img_comp_attr img_other_attr . i
+    5  | . img_other_attr img_comp_attr
+    6 img_comp_attr: . IMG_SRC
+    7              | . IMG_ALT
+    8 img_other_attr: . IMG_OTHER_ATTRIBUTE img_other_attr
+    9               | .  [IMG_ALT, IMG_SRC]
+
+    IMG_ALT              shift, and go to state 11
+    IMG_SRC              shift, and go to state 12
+    IMG_OTHER_ATTRIBUTE  shift, and go to state 13
+
+    IMG_ALT  [reduce using rule 9 (img_other_attr)]
+    IMG_SRC  [reduce using rule 9 (img_other_attr)]
+
+    i               go to state 31
+    img_comp_attr   go to state 15
+    img_other_attr  go to state 16
+
+
+state 27
+
+    5 i: img_other_attr img_comp_attr .
+
+    $default  reduce using rule 5 (i)
+
+
+state 28
+
+   17 content: A_CONTENT content .
+
+    $default  reduce using rule 17 (content)
+
+
+state 29
+
+   14 anchor_attrs: END_TAG1 anchor_rem A_END_TAG .
+
+    $default  reduce using rule 14 (anchor_attrs)
+
+
+state 30
+
+   15 anchor_rem: . content S anchor_rem
+   15           | content S . anchor_rem
+   16           | . content
+   17 content: . A_CONTENT content
+   18        | .  [START_ANGLE_BRACKET, A_END_TAG]
+
+    A_CONTENT  shift, and go to state 18
+
+    $default  reduce using rule 18 (content)
+
+    anchor_rem  go to state 32
+    content     go to state 20
+
+
+state 31
+
+    4 i: img_comp_attr img_other_attr i .
+
+    $default  reduce using rule 4 (i)
+
+
+state 32
+
+   15 anchor_rem: content S anchor_rem .
+
+    $default  reduce using rule 15 (anchor_rem)
